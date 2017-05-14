@@ -1,0 +1,33 @@
+erp_portal:
+   image: dreambeam/tomcat8:latest
+   container_name: "portal"
+   expose:
+    - "8009"
+    volumes:
+    - ./portal-webapps:/usr/local/tomcat/webapps
+   restart: always
+erp_search:
+  image: dreambeam/tomcat8:latest
+  container_name: "search"
+  expose:
+    - "8009"
+   volumes:
+    - ./search-webapps:/usr/local/tomcat/webapps
+  restart: always
+erp_business:
+  image: dreambeam/tomcat8   
+  container_name: "business"
+   volumes:
+    - ./business-webapp:/usr/local/tomcat/webapps
+   expose:
+    - "8009"  
+http:
+   image: httpd:latest
+   container_name: "http-proxy"
+   volumes:
+    - ./httpd/conf/jk_mod/jk.conf:/etc/apache2/mods-available/jk.conf
+    - ./logs:/var/log/apache2
+    - ./httpd/conf/jk_mod/workers.properties:/etc/libapache2-mod-jk/workers.properties
+    - ./httpd/conf/apache2/000-default.conf:/etc/apache2/sites-available/000-default.conf
+   ports:
+     - "80:80"
